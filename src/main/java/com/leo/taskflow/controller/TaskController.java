@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import com.leo.taskflow.dto.UpdateTaskStatusRequest;
+import org.springframework.web.bind.annotation.PatchMapping;
+
 import java.util.List;
 
 @RestController
@@ -56,5 +59,13 @@ public class TaskController {
             @RequestBody UpdateTaskRequest request
     ) {
         return taskService.updateTaskById(id, request);
+    }
+
+    @PatchMapping("/{id}/status")
+    public TaskResponse updateTaskStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateTaskStatusRequest request
+    ) {
+        return taskService.updateTaskStatusById(id, request);
     }
 }

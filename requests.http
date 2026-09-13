@@ -11,42 +11,13 @@ GET http://localhost:8080/tasks
 
 ###
 
-GET http://localhost:8080/tasks/1
-
-###
-
-GET http://localhost:8080/tasks/999
-
-###
-
-DELETE http://localhost:8080/tasks/1
-
-###
-
-GET http://localhost:8080/tasks
-
-###
-
-DELETE http://localhost:8080/tasks/999
-
-###
-
-PUT http://localhost:8080/tasks/2
+PATCH http://localhost:8080/tasks/2/status
 Content-Type: application/json
 
 {
-  "title": "完成 Spring Boot 的任务更新功能"
+  "status": "IN_PROGRESS"
 }
 
 ###
 
 GET http://localhost:8080/tasks/2
-
-###
-
-PUT http://localhost:8080/tasks/999
-Content-Type: application/json
-
-{
-  "title": "不存在的任务"
-}

@@ -4,6 +4,8 @@ import com.leo.taskflow.dto.CreateTaskRequest;
 import com.leo.taskflow.dto.TaskResponse;
 import com.leo.taskflow.entity.Task;
 import com.leo.taskflow.dto.UpdateTaskRequest;
+import com.leo.taskflow.dto.UpdateTaskStatusRequest;
+import com.leo.taskflow.entity.TaskStatus;
 
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,7 @@ public class TaskService {
     private long nextId = 1L;
 
     public TaskResponse createTask(CreateTaskRequest request) {
-        Task task = new Task(nextId, request.title());
+        Task task = new Task(nextId, request.title(), TaskStatus.TODO);
 
         nextId++;
         tasks.add(task);
@@ -67,7 +69,23 @@ public class TaskService {
             Task task = tasks.get(index);
 
             if (task.id().equals(id)) {
-                Task updatedTask = new Task(task.id(), request.title());
+                Task updatedTask = new Task(task.id(), request.title(), task.status());
+
+                tasks.set(index, updatedTask);
+
+                return toResponse(updatedTask);
+            }
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
+    }
+
+    public TaskResponse updateTaskStatusById(Long id, UpdateTaskStatusRequest request) {
+        for (int index = 0; index < tasks.size(); index++) {
+            Task task = tasks.get(index);
+
+            if (task.id().equals(id)) {
+                Task updatedTask = new Task(task.id(), task.title(), request.status());
 
                 tasks.set(index, updatedTask);
 
@@ -79,6 +97,6 @@ public class TaskService {
     }
 
     private TaskResponse toResponse(Task task) {
-        return new TaskResponse(task.id(), task.title());
+        return new TaskResponse(task.id(), task.title(), task.status());
     }
 }
