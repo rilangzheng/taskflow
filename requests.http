@@ -28,3 +28,25 @@ GET http://localhost:8080/tasks
 ###
 
 DELETE http://localhost:8080/tasks/999
+
+###
+
+PUT http://localhost:8080/tasks/2
+Content-Type: application/json
+
+{
+  "title": "完成 Spring Boot 的任务更新功能"
+}
+
+###
+
+GET http://localhost:8080/tasks/2
+
+###
+
+PUT http://localhost:8080/tasks/999
+Content-Type: application/json
+
+{
+  "title": "不存在的任务"
+}

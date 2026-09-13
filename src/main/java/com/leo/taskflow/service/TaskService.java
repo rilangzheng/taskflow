@@ -3,6 +3,8 @@ package com.leo.taskflow.service;
 import com.leo.taskflow.dto.CreateTaskRequest;
 import com.leo.taskflow.dto.TaskResponse;
 import com.leo.taskflow.entity.Task;
+import com.leo.taskflow.dto.UpdateTaskRequest;
+
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,6 +56,22 @@ public class TaskService {
             if (task.id().equals(id)) {
                 iterator.remove();
                 return;
+            }
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
+    }
+
+    public TaskResponse updateTaskById(Long id, UpdateTaskRequest request) {
+        for (int index = 0; index < tasks.size(); index++) {
+            Task task = tasks.get(index);
+
+            if (task.id().equals(id)) {
+                Task updatedTask = new Task(task.id(), request.title());
+
+                tasks.set(index, updatedTask);
+
+                return toResponse(updatedTask);
             }
         }
 
