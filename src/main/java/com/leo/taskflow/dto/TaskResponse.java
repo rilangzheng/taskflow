@@ -1,4 +1,4 @@
 package com.leo.taskflow.dto;
 
-public record TaskResponse(String message, String title) {
+public record TaskResponse(Long id, String title) {
 }
