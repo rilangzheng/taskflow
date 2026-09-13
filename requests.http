@@ -16,3 +16,15 @@ GET http://localhost:8080/tasks/1
 ###
 
 GET http://localhost:8080/tasks/999
+
+###
+
+DELETE http://localhost:8080/tasks/1
+
+###
+
+GET http://localhost:8080/tasks
+
+###
+
+DELETE http://localhost:8080/tasks/999

@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 @Service
 public class TaskService {
@@ -38,6 +39,21 @@ public class TaskService {
         for (Task task : tasks) {
             if (task.id().equals(id)) {
                 return toResponse(task);
+            }
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
+    }
+
+    public void deleteTaskById(Long id) {
+        Iterator<Task> iterator = tasks.iterator();
+
+        while (iterator.hasNext()) {
+            Task task = iterator.next();
+
+            if (task.id().equals(id)) {
+                iterator.remove();
+                return;
             }
         }
 
