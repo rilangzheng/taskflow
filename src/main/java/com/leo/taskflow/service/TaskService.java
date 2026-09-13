@@ -4,6 +4,8 @@ import com.leo.taskflow.dto.CreateTaskRequest;
 import com.leo.taskflow.dto.TaskResponse;
 import com.leo.taskflow.entity.Task;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,16 @@ public class TaskService {
         }
 
         return responses;
+    }
+
+    public TaskResponse getTaskById(Long id) {
+        for (Task task : tasks) {
+            if (task.id().equals(id)) {
+                return toResponse(task);
+            }
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
     }
 
     private TaskResponse toResponse(Task task) {
