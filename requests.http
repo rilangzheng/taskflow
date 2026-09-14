@@ -24,13 +24,17 @@ GET http://localhost:8080/tasks/999
 
 ###
 
-PUT http://localhost:8080/tasks/999
+POST http://localhost:8080/tasks
 Content-Type: application/json
 
 {
-  "title": "已从 MySQL 更新标题"
+  "title": "用于测试删除的任务"
 }
 
 ###
 
-GET http://localhost:8080/tasks/1
+DELETE http://localhost:8080/tasks/5
+
+###
+
+GET http://localhost:8080/tasks/5

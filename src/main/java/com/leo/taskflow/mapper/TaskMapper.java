@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Delete;
 
 import java.util.List;
 
@@ -56,4 +57,10 @@ public interface TaskMapper {
             @Param("id") Long id,
             @Param("status") TaskStatus status
     );
+
+    @Delete("""
+            DELETE FROM task
+            WHERE id = #{id}
+            """)
+    int deleteById(@Param("id") Long id);
 }

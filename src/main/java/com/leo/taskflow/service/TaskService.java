@@ -14,12 +14,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
 
 @Service
 public class TaskService {
     private final TaskMapper taskMapper;
-    private final List<Task> tasks = new ArrayList<>();
 
     public TaskService(TaskMapper taskMapper) {
         this.taskMapper = taskMapper;
@@ -54,18 +52,11 @@ public class TaskService {
     }
 
     public void deleteTaskById(Long id) {
-        Iterator<Task> iterator = tasks.iterator();
+        int affectedRows = taskMapper.deleteById(id);
 
-        while (iterator.hasNext()) {
-            Task task = iterator.next();
-
-            if (task.id().equals(id)) {
-                iterator.remove();
-                return;
-            }
+        if (affectedRows == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
         }
-
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
     }
 
     public TaskResponse updateTaskById(Long id, UpdateTaskRequest request) {
