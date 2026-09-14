@@ -1,6 +1,7 @@
 package com.leo.taskflow.mapper;
 
 import com.leo.taskflow.entity.Task;
+import com.leo.taskflow.entity.TaskStatus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Insert;
@@ -43,5 +44,16 @@ public interface TaskMapper {
     int updateTitle(
             @Param("id") Long id,
             @Param("title") String title
+    );
+
+    @Update("""
+            UPDATE task
+            SET status = #{status},
+                updated_at = NOW()
+            WHERE id = #{id}
+            """)
+    int updateStatus(
+            @Param("id") Long id,
+            @Param("status") TaskStatus status
     );
 }

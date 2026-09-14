@@ -81,19 +81,15 @@ public class TaskService {
     }
 
     public TaskResponse updateTaskStatusById(Long id, UpdateTaskStatusRequest request) {
-        for (int index = 0; index < tasks.size(); index++) {
-            Task task = tasks.get(index);
+        int affectedRows = taskMapper.updateStatus(id, request.status());
 
-            if (task.id().equals(id)) {
-                Task updatedTask = new Task(task.id(), task.title(), request.status());
-
-                tasks.set(index, updatedTask);
-
-                return toResponse(updatedTask);
-            }
+        if (affectedRows == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
         }
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
+        Task updatedTask = taskMapper.findById(id);
+
+        return toResponse(updatedTask);
     }
 
     private TaskResponse toResponse(Task task) {
