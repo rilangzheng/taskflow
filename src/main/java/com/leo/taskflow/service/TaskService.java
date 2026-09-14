@@ -6,6 +6,7 @@ import com.leo.taskflow.entity.Task;
 import com.leo.taskflow.dto.UpdateTaskRequest;
 import com.leo.taskflow.dto.UpdateTaskStatusRequest;
 import com.leo.taskflow.entity.TaskStatus;
+import com.leo.taskflow.mapper.TaskMapper;
 
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
@@ -17,14 +18,17 @@ import java.util.Iterator;
 
 @Service
 public class TaskService {
+    private final TaskMapper taskMapper;
     private final List<Task> tasks = new ArrayList<>();
-    private long nextId = 1L;
+
+    public TaskService(TaskMapper taskMapper) {
+        this.taskMapper = taskMapper;
+    }
 
     public TaskResponse createTask(CreateTaskRequest request) {
-        Task task = new Task(nextId, request.title(), TaskStatus.TODO);
+        Task task = new Task(null, request.title(), TaskStatus.TODO);
 
-        nextId++;
-        tasks.add(task);
+        taskMapper.insert(task);
 
         return toResponse(task);
     }
@@ -32,7 +36,7 @@ public class TaskService {
     public List<TaskResponse> getTasks() {
         List<TaskResponse> responses = new ArrayList<>();
 
-        for (Task task : tasks) {
+        for (Task task : taskMapper.findAll()) {
             responses.add(toResponse(task));
         }
 

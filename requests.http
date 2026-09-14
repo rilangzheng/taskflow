@@ -2,7 +2,7 @@ POST http://localhost:8080/tasks
 Content-Type: application/json
 
 {
-  "title": "理解 Controller 和 Service"
+  "title": "学习 MyBatis 的 Insert"
 }
 
 ###
