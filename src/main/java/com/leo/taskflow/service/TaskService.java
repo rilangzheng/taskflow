@@ -44,13 +44,13 @@ public class TaskService {
     }
 
     public TaskResponse getTaskById(Long id) {
-        for (Task task : tasks) {
-            if (task.id().equals(id)) {
-                return toResponse(task);
-            }
+        Task task = taskMapper.findById(id);
+
+        if (task == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
         }
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
+        return toResponse(task);
     }
 
     public void deleteTaskById(Long id) {

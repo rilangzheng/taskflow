@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +25,11 @@ public interface TaskMapper {
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Task task);
+
+    @Select("""
+            SELECT id, title, status
+            FROM task
+            WHERE id = #{id}
+            """)
+    Task findById(@Param("id") Long id);
 }
