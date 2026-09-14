@@ -21,3 +21,16 @@ Content-Type: application/json
 ###
 
 GET http://localhost:8080/tasks/999
+
+###
+
+PUT http://localhost:8080/tasks/999
+Content-Type: application/json
+
+{
+  "title": "已从 MySQL 更新标题"
+}
+
+###
+
+GET http://localhost:8080/tasks/1

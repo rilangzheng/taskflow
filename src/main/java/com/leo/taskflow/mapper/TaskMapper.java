@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -32,4 +33,15 @@ public interface TaskMapper {
             WHERE id = #{id}
             """)
     Task findById(@Param("id") Long id);
+
+    @Update("""
+            UPDATE task
+            SET title = #{title},
+                updated_at = NOW()
+            WHERE id = #{id}
+            """)
+    int updateTitle(
+            @Param("id") Long id,
+            @Param("title") String title
+    );
 }
