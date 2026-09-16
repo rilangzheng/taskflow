@@ -9,6 +9,9 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.Delete;
+import com.leo.taskflow.entity.Priority;
+
+import java.time.LocalDate;
 
 import java.util.List;
 
@@ -55,12 +58,18 @@ public interface TaskMapper {
     @Update("""
             UPDATE task
             SET title = #{title},
+                description = #{description},
+                priority = #{priority},
+                due_date = #{dueDate},
                 updated_at = NOW()
             WHERE id = #{id}
             """)
-    int updateTitle(
+    int updateDetails(
             @Param("id") Long id,
-            @Param("title") String title
+            @Param("title") String title,
+            @Param("description") String description,
+            @Param("priority") Priority priority,
+            @Param("dueDate") LocalDate dueDate
     );
 
     @Update("""

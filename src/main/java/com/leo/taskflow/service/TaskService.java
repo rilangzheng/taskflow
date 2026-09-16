@@ -72,7 +72,17 @@ public class TaskService {
     }
 
     public TaskResponse updateTaskById(Long id, UpdateTaskRequest request) {
-        int affectedRows = taskMapper.updateTitle(id, request.title());
+        Priority priority = request.priority() == null
+                ? Priority.MEDIUM
+                : request.priority();
+
+        int affectedRows = taskMapper.updateDetails(
+                id,
+                request.title(),
+                request.description(),
+                priority,
+                request.dueDate()
+        );
 
         if (affectedRows == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
