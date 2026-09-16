@@ -2,12 +2,13 @@ POST http://localhost:8080/tasks
 Content-Type: application/json
 
 {
-  "title": "学习 MyBatis 的 Insert"
+  "title": "学习任务描述字段",
+  "description": "理解数据库字段如何贯穿 DTO、Service 和 Mapper"
 }
 
 ###
 
-GET http://localhost:8080/tasks/3
+GET http://localhost:8080/tasks/6
 
 ###
 
@@ -18,23 +19,3 @@ Content-Type: application/json
   "status": "IN_PROGRESS"
 }
 
-###
-
-GET http://localhost:8080/tasks/999
-
-###
-
-POST http://localhost:8080/tasks
-Content-Type: application/json
-
-{
-  "title": "用于测试删除的任务"
-}
-
-###
-
-DELETE http://localhost:8080/tasks/5
-
-###
-
-GET http://localhost:8080/tasks/5

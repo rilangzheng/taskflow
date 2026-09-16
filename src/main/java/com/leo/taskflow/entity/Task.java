@@ -5,10 +5,12 @@ public class Task {
     private Long id;
     private String title;
     private TaskStatus status;
+    private String description;
 
-    public Task(Long id, String title, TaskStatus status) {
+    public Task(Long id, String title, String description, TaskStatus status) {
         this.id = id;
         this.title = title;
+        this.description = description;
         this.status = status;
     }
 
@@ -31,5 +33,9 @@ public class Task {
 
     public TaskStatus status() {
         return status;
+    }
+
+    public String description() {
+        return description;
     }
 }

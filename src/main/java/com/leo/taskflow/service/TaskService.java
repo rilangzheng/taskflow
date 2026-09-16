@@ -24,7 +24,12 @@ public class TaskService {
     }
 
     public TaskResponse createTask(CreateTaskRequest request) {
-        Task task = new Task(null, request.title(), TaskStatus.TODO);
+        Task task = new Task(
+                null,
+                request.title(),
+                request.description(),
+                TaskStatus.TODO
+        );
 
         taskMapper.insert(task);
 
@@ -84,6 +89,11 @@ public class TaskService {
     }
 
     private TaskResponse toResponse(Task task) {
-        return new TaskResponse(task.id(), task.title(), task.status());
+        return new TaskResponse(
+                task.id(),
+                task.title(),
+                task.description(),
+                task.status()
+        );
     }
 }
