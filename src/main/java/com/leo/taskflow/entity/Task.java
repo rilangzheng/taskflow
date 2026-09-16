@@ -1,16 +1,29 @@
 package com.leo.taskflow.entity;
 
+import java.time.LocalDate;
+
 public class Task {
 
     private Long id;
     private String title;
     private TaskStatus status;
     private String description;
+    private Priority priority;
+    private LocalDate dueDate;
 
-    public Task(Long id, String title, String description, TaskStatus status) {
+    public Task(
+            Long id,
+            String title,
+            String description,
+            Priority priority,
+            LocalDate dueDate,
+            TaskStatus status
+    ) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.priority = priority;
+        this.dueDate = dueDate;
         this.status = status;
     }
 
@@ -37,5 +50,13 @@ public class Task {
 
     public String description() {
         return description;
+    }
+
+    public Priority priority() {
+        return priority;
+    }
+
+    public LocalDate dueDate() {
+        return dueDate;
     }
 }

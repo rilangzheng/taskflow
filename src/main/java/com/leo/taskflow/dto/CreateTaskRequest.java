@@ -1,4 +1,13 @@
 package com.leo.taskflow.dto;
 
-public record CreateTaskRequest(String title, String description) {
+import com.leo.taskflow.entity.Priority;
+
+import java.time.LocalDate;
+
+public record CreateTaskRequest(
+        String title,
+        String description,
+        Priority priority,
+        LocalDate dueDate
+) {
 }

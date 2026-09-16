@@ -2,13 +2,15 @@ POST http://localhost:8080/tasks
 Content-Type: application/json
 
 {
-  "title": "学习任务描述字段",
-  "description": "理解数据库字段如何贯穿 DTO、Service 和 Mapper"
+  "title": "完成 TaskFlow 基础字段",
+  "description": "增加描述、优先级和截止日期",
+  "priority": "HIGH",
+  "dueDate": "2026-10-01"
 }
 
 ###
 
-GET http://localhost:8080/tasks/6
+GET http://localhost:8080/tasks/7
 
 ###
 

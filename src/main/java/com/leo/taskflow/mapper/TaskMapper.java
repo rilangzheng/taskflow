@@ -16,21 +16,37 @@ import java.util.List;
 public interface TaskMapper {
 
     @Select("""
-            SELECT id, title, description, status
+            SELECT id, title, description, priority, due_date, status
             FROM task
             ORDER BY id
             """)
     List<Task> findAll();
 
     @Insert("""
-            INSERT INTO task (title, description, status, created_at, updated_at)
-            VALUES (#{title}, #{description}, #{status}, NOW(), NOW())
+            INSERT INTO task (
+                title,
+                description,
+                priority,
+                due_date,
+                status,
+                created_at,
+                updated_at
+            )
+            VALUES (
+                #{title},
+                #{description},
+                #{priority},
+                #{dueDate},
+                #{status},
+                NOW(),
+                NOW()
+            )
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Task task);
 
     @Select("""
-            SELECT id, title, description, status
+            SELECT id, title, description, priority, due_date, status
             FROM task
             WHERE id = #{id}
             """)

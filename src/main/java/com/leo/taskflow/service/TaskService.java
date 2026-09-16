@@ -7,6 +7,7 @@ import com.leo.taskflow.dto.UpdateTaskRequest;
 import com.leo.taskflow.dto.UpdateTaskStatusRequest;
 import com.leo.taskflow.entity.TaskStatus;
 import com.leo.taskflow.mapper.TaskMapper;
+import com.leo.taskflow.entity.Priority;
 
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,16 @@ public class TaskService {
     }
 
     public TaskResponse createTask(CreateTaskRequest request) {
+        Priority priority = request.priority() == null
+                ? Priority.MEDIUM
+                : request.priority();
+
         Task task = new Task(
                 null,
                 request.title(),
                 request.description(),
+                priority,
+                request.dueDate(),
                 TaskStatus.TODO
         );
 
@@ -93,6 +100,8 @@ public class TaskService {
                 task.id(),
                 task.title(),
                 task.description(),
+                task.priority(),
+                task.dueDate(),
                 task.status()
         );
     }
