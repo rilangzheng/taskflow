@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.leo.taskflow.dto.UpdateTaskStatusRequest;
 import org.springframework.web.bind.annotation.PatchMapping;
 
+import com.leo.taskflow.entity.TaskStatus;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 
 @RestController
@@ -38,8 +41,10 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponse> getTasks() {
-        return taskService.getTasks();
+    public List<TaskResponse> getTasks(
+            @RequestParam(required = false) TaskStatus status
+    ) {
+        return taskService.getTasks(status);
     }
 
     @GetMapping("/{id}")

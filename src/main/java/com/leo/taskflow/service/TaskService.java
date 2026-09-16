@@ -43,10 +43,18 @@ public class TaskService {
         return toResponse(task);
     }
 
-    public List<TaskResponse> getTasks() {
+    public List<TaskResponse> getTasks(TaskStatus status) {
+        List<Task> tasks;
+
+        if (status == null) {
+            tasks = taskMapper.findAll();
+        } else {
+            tasks = taskMapper.findByStatus(status);
+        }
+
         List<TaskResponse> responses = new ArrayList<>();
 
-        for (Task task : taskMapper.findAll()) {
+        for (Task task : tasks) {
             responses.add(toResponse(task));
         }
 

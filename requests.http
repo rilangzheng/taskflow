@@ -1,29 +1,15 @@
 ###
 
-PUT http://localhost:8080/tasks/6
-Content-Type: application/json
-
-{
-  "title": "更新后的完整任务",
-  "description": "PUT 已更新标题、描述、优先级和截止日期",
-  "priority": "HIGH",
-  "dueDate": "2026-10-15"
-}
+GET http://localhost:8080/tasks
 
 ###
 
-GET http://localhost:8080/tasks/6
+GET http://localhost:8080/tasks?status=TODO
 
 ###
 
-GET http://localhost:8080/tasks/7
+GET http://localhost:8080/tasks?status=IN_PROGRESS
 
 ###
 
-PATCH http://localhost:8080/tasks/99/status
-Content-Type: application/json
-
-{
-  "status": "IN_PROGRESS"
-}
-
+GET http://localhost:8080/tasks?status=DONE

@@ -25,6 +25,14 @@ public interface TaskMapper {
             """)
     List<Task> findAll();
 
+    @Select("""
+            SELECT id, title, description, priority, due_date, status
+            FROM task
+            WHERE status = #{status}
+            ORDER BY id
+            """)
+    List<Task> findByStatus(@Param("status") TaskStatus status);
+
     @Insert("""
             INSERT INTO task (
                 title,
