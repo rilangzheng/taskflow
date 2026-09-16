@@ -24,6 +24,7 @@ import com.leo.taskflow.entity.TaskStatus;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/tasks")
@@ -36,7 +37,9 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskResponse createTask(@RequestBody CreateTaskRequest request) {
+    public TaskResponse createTask(
+            @Valid @RequestBody CreateTaskRequest request
+    ) {
         return taskService.createTask(request);
     }
 
@@ -63,7 +66,7 @@ public class TaskController {
     @PutMapping("/{id}")
     public TaskResponse updateTask(
             @PathVariable Long id,
-            @RequestBody UpdateTaskRequest request
+            @Valid @RequestBody UpdateTaskRequest request
     ) {
         return taskService.updateTaskById(id, request);
     }

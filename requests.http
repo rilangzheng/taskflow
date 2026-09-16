@@ -1,19 +1,23 @@
 ###
 
-GET http://localhost:8080/tasks?page=0&size=2
+POST http://localhost:8080/tasks
+Content-Type: application/json
+
+{
+  "title": "验证任务标题",
+  "description": "测试合法请求可以正常写入",
+  "priority": "MEDIUM",
+  "dueDate": "2026-10-20"
+}
 
 ###
 
-GET http://localhost:8080/tasks?page=1&size=2
+POST http://localhost:8080/tasks
+Content-Type: application/json
 
-###
-
-GET http://localhost:8080/tasks?status=TODO&page=0&size=2
-
-###
-
-GET http://localhost:8080/tasks?page=1&size=101
-
-###
-
-GET http://localhost:8080/tasks
+{
+  "title": "   ",
+  "description": "这个请求不应写入数据库",
+  "priority": "MEDIUM",
+  "dueDate": "2026-10-20"
+}
