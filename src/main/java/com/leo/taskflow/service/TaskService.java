@@ -43,13 +43,33 @@ public class TaskService {
         return toResponse(task);
     }
 
-    public List<TaskResponse> getTasks(TaskStatus status) {
+    public List<TaskResponse> getTasks(
+            TaskStatus status,
+            int page,
+            int size
+    ) {
+        if (page < 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "页码不能小于 0"
+            );
+        }
+
+        if (size < 1 || size > 100) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "每页数量必须在 1 到 100 之间"
+            );
+        }
+
+        int offset = page * size;
+
         List<Task> tasks;
 
         if (status == null) {
-            tasks = taskMapper.findAll();
+            tasks = taskMapper.findAllPaged(size, offset);
         } else {
-            tasks = taskMapper.findByStatus(status);
+            tasks = taskMapper.findByStatusPaged(status, size, offset);
         }
 
         List<TaskResponse> responses = new ArrayList<>();

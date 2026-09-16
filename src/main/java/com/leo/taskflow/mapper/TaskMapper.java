@@ -22,16 +22,25 @@ public interface TaskMapper {
             SELECT id, title, description, priority, due_date, status
             FROM task
             ORDER BY id
+            LIMIT #{size} OFFSET #{offset}
             """)
-    List<Task> findAll();
+    List<Task> findAllPaged(
+            @Param("size") int size,
+            @Param("offset") int offset
+    );
 
     @Select("""
             SELECT id, title, description, priority, due_date, status
             FROM task
             WHERE status = #{status}
             ORDER BY id
+            LIMIT #{size} OFFSET #{offset}
             """)
-    List<Task> findByStatus(@Param("status") TaskStatus status);
+    List<Task> findByStatusPaged(
+            @Param("status") TaskStatus status,
+            @Param("size") int size,
+            @Param("offset") int offset
+    );
 
     @Insert("""
             INSERT INTO task (

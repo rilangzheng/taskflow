@@ -42,9 +42,11 @@ public class TaskController {
 
     @GetMapping
     public List<TaskResponse> getTasks(
-            @RequestParam(required = false) TaskStatus status
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        return taskService.getTasks(status);
+        return taskService.getTasks(status, page, size);
     }
 
     @GetMapping("/{id}")
