@@ -4,20 +4,12 @@ POST http://localhost:8080/tasks
 Content-Type: application/json
 
 {
-  "title": "验证任务标题",
-  "description": "测试合法请求可以正常写入",
+  "title": "   ",
+  "description": "不应创建",
   "priority": "MEDIUM",
   "dueDate": "2026-10-20"
 }
 
 ###
 
-POST http://localhost:8080/tasks
-Content-Type: application/json
-
-{
-  "title": "   ",
-  "description": "这个请求不应写入数据库",
-  "priority": "MEDIUM",
-  "dueDate": "2026-10-20"
-}
+GET http://localhost:8080/tasks/999999
