@@ -1,15 +1,28 @@
 ###
 
-POST http://localhost:8080/tasks
+PATCH http://localhost:8080/tasks/8/status
 Content-Type: application/json
 
 {
-  "title": "   ",
-  "description": "不应创建",
-  "priority": "MEDIUM",
-  "dueDate": "2026-10-20"
+  "status": a
 }
 
 ###
 
-GET http://localhost:8080/tasks/999999
+POST http://localhost:8080/tasks
+Content-Type: application/json
+
+{
+  "title": "非法优先级测试",
+  "description": null,
+  "priority": "URGENT",
+  "dueDate": null
+}
+
+###
+
+GET http://localhost:8080/tasks?status=WAITING
+
+###
+
+GET http://localhost:8080/tasks?page=hello&size=10

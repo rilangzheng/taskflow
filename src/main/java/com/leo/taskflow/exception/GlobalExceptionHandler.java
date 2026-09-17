@@ -3,11 +3,14 @@ package com.leo.taskflow.exception;
 import com.leo.taskflow.dto.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
@@ -24,15 +27,26 @@ public class GlobalExceptionHandler {
                 ? "请求参数不合法"
                 : fieldError.getDefaultMessage();
 
-        ApiErrorResponse response = new ApiErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
                 message,
-                request.getRequestURI()
+                request
         );
+    }
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(response);
+    @ExceptionHandler({
+            HttpMessageNotReadableException.class,
+            MethodArgumentTypeMismatchException.class
+    })
+    public ResponseEntity<ApiErrorResponse> handleInvalidFormatException(
+            Exception exception,
+            HttpServletRequest request
+    ) {
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
+                "请求参数格式不正确",
+                request
+        );
     }
 
     @ExceptionHandler(ResponseStatusException.class)
@@ -44,15 +58,11 @@ public class GlobalExceptionHandler {
                 ? "请求失败"
                 : exception.getReason();
 
-        ApiErrorResponse response = new ApiErrorResponse(
-                exception.getStatusCode().value(),
+        return buildResponse(
+                exception.getStatusCode(),
                 message,
-                request.getRequestURI()
+                request
         );
-
-        return ResponseEntity
-                .status(exception.getStatusCode())
-                .body(response);
     }
 
     @ExceptionHandler(Exception.class)
@@ -60,14 +70,26 @@ public class GlobalExceptionHandler {
             Exception exception,
             HttpServletRequest request
     ) {
-        ApiErrorResponse response = new ApiErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        return buildResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 "服务器内部错误",
+                request
+        );
+    }
+
+    private ResponseEntity<ApiErrorResponse> buildResponse(
+            HttpStatusCode status,
+            String message,
+            HttpServletRequest request
+    ) {
+        ApiErrorResponse response = new ApiErrorResponse(
+                status.value(),
+                message,
                 request.getRequestURI()
         );
 
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .status(status)
                 .body(response);
     }
 }
