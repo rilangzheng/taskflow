@@ -4,7 +4,7 @@ PATCH http://localhost:8080/tasks/8/status
 Content-Type: application/json
 
 {
-  "status": a
+  "status": 1
 }
 
 ###
