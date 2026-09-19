@@ -1,6 +1,143 @@
+@baseUrl = http://localhost:8080
+@taskId = 0
+@notFoundTaskId = 999999999
+
+# 先运行第 1 个请求。
+# 然后把响应 JSON 中的 id 填入上方的 @taskId，
+# 再按顺序运行第 2 至第 9 个请求。
+
 ###
 
-PATCH http://localhost:8080/tasks/8/status
+### 1. 创建任务：未传 priority 时应默认 MEDIUM，status 应为 TODO
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "HTTP 完整测试任务",
+  "description": "用于测试任务接口",
+  "dueDate": "2026-12-31"
+}
+
+###
+
+### 2. 分页查询全部任务
+GET {{baseUrl}}/tasks?page=0&size=10
+
+###
+
+### 3. 按 TODO 状态筛选
+GET {{baseUrl}}/tasks?status=TODO&page=0&size=10
+
+###
+
+### 4. 按 ID 查询刚创建的任务
+GET {{baseUrl}}/tasks/{{taskId}}
+
+###
+
+### 5. 修改任务基础信息
+PUT {{baseUrl}}/tasks/{{taskId}}
+Content-Type: application/json
+
+{
+  "title": "HTTP 修改后的任务",
+  "description": "已测试 PUT 修改",
+  "priority": "HIGH",
+  "dueDate": "2027-01-01"
+}
+
+###
+
+### 6. 修改任务状态
+PATCH {{baseUrl}}/tasks/{{taskId}}/status
+Content-Type: application/json
+
+{
+  "status": "IN_PROGRESS"
+}
+
+###
+
+### 7. 按 IN_PROGRESS 状态筛选
+GET {{baseUrl}}/tasks?status=IN_PROGRESS&page=0&size=10
+
+###
+
+### 8. 删除任务，应返回 204 No Content
+DELETE {{baseUrl}}/tasks/{{taskId}}
+
+###
+
+### 9. 查询已删除任务，应返回 404
+GET {{baseUrl}}/tasks/{{taskId}}
+
+###
+
+### 10. 标题为空，应返回“标题不能为空”
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "",
+  "description": "校验测试"
+}
+
+###
+
+### 11. 标题超过 100 个字符，应返回长度校验错误
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
+
+###
+
+### 12. priority 不是合法枚举值，应返回“请求参数格式不正确”
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "非法优先级测试",
+  "priority": "URGENT"
+}
+
+###
+
+### 13. priority 传数字，应返回“请求参数格式不正确”
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "数字优先级测试",
+  "priority": 1
+}
+
+###
+
+### 14. status 为空，应返回“任务状态不能为空”
+PATCH {{baseUrl}}/tasks/{{notFoundTaskId}}/status
+Content-Type: application/json
+
+{
+  "status": null
+}
+
+###
+
+### 15. status 为非法文本，应返回“请求参数格式不正确”
+PATCH {{baseUrl}}/tasks/{{notFoundTaskId}}/status
+Content-Type: application/json
+
+{
+  "status": "WAITING"
+}
+
+###
+
+### 16. status 传数字，应返回“请求参数格式不正确”
+PATCH {{baseUrl}}/tasks/{{notFoundTaskId}}/status
 Content-Type: application/json
 
 {
@@ -9,20 +146,53 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/tasks
+### 17. 查询参数 status 非法，应返回“请求参数格式不正确”
+GET {{baseUrl}}/tasks?status=WAITING
+
+###
+
+### 18. page 不是数字，应返回“请求参数格式不正确”
+GET {{baseUrl}}/tasks?page=hello&size=10
+
+###
+
+### 19. page 小于 0，应返回“页码不能小于 0”
+GET {{baseUrl}}/tasks?page=-1&size=10
+
+###
+
+### 20. size 为 0，应返回“每页数量必须在 1 到 100 之间”
+GET {{baseUrl}}/tasks?page=0&size=0
+
+###
+
+### 21. size 超过 100，应返回“每页数量必须在 1 到 100 之间”
+GET {{baseUrl}}/tasks?page=0&size=101
+
+###
+
+### 22. 修改不存在的任务，应返回 404
+PUT {{baseUrl}}/tasks/{{notFoundTaskId}}
 Content-Type: application/json
 
 {
-  "title": "非法优先级测试",
-  "description": null,
-  "priority": "URGENT",
-  "dueDate": null
+  "title": "不存在的任务",
+  "description": "测试 404",
+  "priority": "LOW",
+  "dueDate": "2027-01-01"
 }
 
 ###
 
-GET http://localhost:8080/tasks?status=WAITING
+### 23. 修改不存在任务的状态，应返回 404
+PATCH {{baseUrl}}/tasks/{{notFoundTaskId}}/status
+Content-Type: application/json
+
+{
+  "status": "DONE"
+}
 
 ###
 
-GET http://localhost:8080/tasks?page=hello&size=10
+### 24. 删除不存在任务，应返回 404
+DELETE {{baseUrl}}/tasks/{{notFoundTaskId}}
