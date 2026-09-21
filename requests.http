@@ -1,9 +1,9 @@
 @baseUrl = http://localhost:8080
-@taskId = 0
+@taskId = 9
 @notFoundTaskId = 999999999
 
 # 先运行第 1 个请求。
-# 然后把响应 JSON 中的 id 填入上方的 @taskId，
+# 然后把响应 JSON 中的 id 填入上方的 taskId，
 # 再按顺序运行第 2 至第 9 个请求。
 
 ###
@@ -196,3 +196,9 @@ Content-Type: application/json
 
 ### 24. 删除不存在任务，应返回 404
 DELETE {{baseUrl}}/tasks/{{notFoundTaskId}}
+
+###
+
+### 获取 OpenAPI JSON 文档
+GET http://localhost:8080/v3/api-docs
+Accept: application/json
