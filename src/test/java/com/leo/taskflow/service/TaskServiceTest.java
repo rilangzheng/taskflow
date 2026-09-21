@@ -7,86 +7,74 @@ import com.leo.taskflow.entity.Task;
 import com.leo.taskflow.entity.TaskStatus;
 import com.leo.taskflow.mapper.TaskMapper;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.List;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
+
+    @Mock
+    private TaskMapper taskMapper;
+
+    @InjectMocks
+    private TaskService taskService;
 
     @Test
     void createTaskWithoutPriorityUsesMediumAndTodo() {
-        // Arrange：准备测试数据和依赖
-        TaskService taskService = new TaskService(new FakeTaskMapper());
+        // Arrange
+        when(taskMapper.insert(any(Task.class))).thenAnswer(invocation -> {
+            Task task = invocation.getArgument(0);
+            task.setId(1L);
+            return 1;
+        });
 
         CreateTaskRequest request = new CreateTaskRequest(
-                "学习 JUnit",
+                "学习 Mockito",
                 null,
                 null,
                 null
         );
 
-        // Act：调用真实的业务方法
+        // Act
         TaskResponse response = taskService.createTask(request);
 
-        // Assert：验证业务结果
+        // Assert
         assertEquals(1L, response.id());
-        assertEquals("学习 JUnit", response.title());
+        assertEquals("学习 Mockito", response.title());
         assertNull(response.description());
         assertEquals(Priority.MEDIUM, response.priority());
         assertNull(response.dueDate());
         assertEquals(TaskStatus.TODO, response.status());
+
+        verify(taskMapper).insert(any(Task.class));
     }
 
-    private static class FakeTaskMapper implements TaskMapper {
+    @Test
+    void getTaskByIdWhenTaskDoesNotExistThrowsNotFound() {
+        // Arrange
+        Long taskId = 999L;
+        when(taskMapper.findById(taskId)).thenReturn(null);
 
-        @Override
-        public int insert(Task task) {
-            // 模拟 MyBatis 插入后回填数据库生成的 ID
-            task.setId(1L);
-            return 1;
-        }
+        // Act
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> taskService.getTaskById(taskId)
+        );
 
-        @Override
-        public List<Task> findAllPaged(int size, int offset) {
-            throw new UnsupportedOperationException("本测试不应调用此方法");
-        }
+        // Assert
+        assertEquals(404, exception.getStatusCode().value());
+        assertEquals("任务不存在，id：999", exception.getReason());
 
-        @Override
-        public List<Task> findByStatusPaged(
-                TaskStatus status,
-                int size,
-                int offset
-        ) {
-            throw new UnsupportedOperationException("本测试不应调用此方法");
-        }
-
-        @Override
-        public Task findById(Long id) {
-            throw new UnsupportedOperationException("本测试不应调用此方法");
-        }
-
-        @Override
-        public int updateDetails(
-                Long id,
-                String title,
-                String description,
-                Priority priority,
-                LocalDate dueDate
-        ) {
-            throw new UnsupportedOperationException("本测试不应调用此方法");
-        }
-
-        @Override
-        public int updateStatus(Long id, TaskStatus status) {
-            throw new UnsupportedOperationException("本测试不应调用此方法");
-        }
-
-        @Override
-        public int deleteById(Long id) {
-            throw new UnsupportedOperationException("本测试不应调用此方法");
-        }
+        verify(taskMapper).findById(taskId);
     }
 }
