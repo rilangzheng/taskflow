@@ -16,8 +16,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class TaskService {
+    private static final Logger log = LoggerFactory.getLogger(TaskService.class);
     private final TaskMapper taskMapper;
 
     public TaskService(TaskMapper taskMapper) {
@@ -39,6 +43,13 @@ public class TaskService {
         );
 
         taskMapper.insert(task);
+
+        log.info(
+                "任务创建成功，id={}, priority={}, status={}",
+                task.id(),
+                task.priority(),
+                task.status()
+        );
 
         return toResponse(task);
     }
@@ -77,6 +88,15 @@ public class TaskService {
         for (Task task : tasks) {
             responses.add(toResponse(task));
         }
+        String statusForLog = status == null ? "ALL" : status.name();
+
+        log.info(
+                "查询任务列表成功，status={}, page={}, size={}, count={}",
+                statusForLog,
+                page,
+                size,
+                responses.size()
+        );
 
         return responses;
     }
@@ -85,6 +105,7 @@ public class TaskService {
         Task task = taskMapper.findById(id);
 
         if (task == null) {
+            log.warn("查询任务失败，任务不存在，id={}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
         }
 
@@ -95,8 +116,11 @@ public class TaskService {
         int affectedRows = taskMapper.deleteById(id);
 
         if (affectedRows == 0) {
+            log.warn("删除任务失败，任务不存在，id={}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
         }
+
+        log.info("任务删除成功，id={}", id);
     }
 
     public TaskResponse updateTaskById(Long id, UpdateTaskRequest request) {
@@ -113,8 +137,11 @@ public class TaskService {
         );
 
         if (affectedRows == 0) {
+            log.warn("修改任务失败，任务不存在，id={}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
         }
+
+        log.info("任务基础信息更新成功，id={}, priority={}", id, priority);
 
         Task updatedTask = taskMapper.findById(id);
 
@@ -125,8 +152,11 @@ public class TaskService {
         int affectedRows = taskMapper.updateStatus(id, request.status());
 
         if (affectedRows == 0) {
+            log.warn("更新任务状态失败，任务不存在，id={}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在，id：" + id);
         }
+
+        log.info("任务状态更新成功，id={}, status={}", id, request.status());
 
         Task updatedTask = taskMapper.findById(id);
 
