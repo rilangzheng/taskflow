@@ -202,3 +202,21 @@ DELETE {{baseUrl}}/tasks/{{notFoundTaskId}}
 ### 获取 OpenAPI JSON 文档
 GET http://localhost:8080/v3/api-docs
 Accept: application/json
+
+###
+
+### Docker Compose：创建任务
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Compose 持久化测试任务",
+  "description": "由 Docker Compose 中的 MySQL 保存",
+  "priority": "HIGH",
+  "dueDate": "2026-12-31"
+}
+
+###
+
+### Docker Compose：查询任务
+GET {{baseUrl}}/tasks?page=0&size=10
